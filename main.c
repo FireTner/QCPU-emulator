@@ -27,12 +27,12 @@ _CND,
 _AST | R(1),
 _ADD | R(2),
 _RST | R(1),
-_PLD,
+_PST,
 
 _AST | R(1),
 _ADD | R(2),
 _RST | R(2),
-_PLD,
+_PST,
 
 _JMP | A(5)
 };

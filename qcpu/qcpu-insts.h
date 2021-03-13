@@ -18,9 +18,9 @@ void SLD(QCPU *CPU, uint8_t inst) { CPU->storageLoad(CPU->dCache, (inst<<5)|(CPU
 // Storage Load Program
 void SLP(QCPU *CPU, uint8_t inst) { CPU->storageLoad(CPU->iCache, (inst<<5)|(CPU->poi&0xF8)); CPU->pc = 0; }
 // Port Store
-void PST(QCPU *CPU, uint8_t inst) { CPU->acc = CPU->portIn(inst); }
+void PST(QCPU *CPU, uint8_t inst) { CPU->portOut(inst, CPU->acc); }
 // Port Load
-void PLD(QCPU *CPU, uint8_t inst) { CPU->portOut(inst, CPU->acc); }
+void PLD(QCPU *CPU, uint8_t inst) { CPU->acc = CPU->portIn(inst); }
 // Condition Select
 void CND(QCPU *CPU, uint8_t inst) { CPU->selFlags = inst; }
 // Load Immediate
