@@ -40,13 +40,14 @@ void AST(QCPU *CPU, uint8_t inst) {
 }
 // Increment Register ; 
 void INC(QCPU *CPU, uint8_t inst) {
-    uint16_t result = CPU->regs[inst]++;
+    uint16_t result = CPU->regs[inst]+1;
     CPU->_Flags = (!result)<<1 | !(result > 0xFF);
+    CPU->acc = result;
 }
 // Right Shift Register ;
 void RSH(QCPU *CPU, uint8_t inst) {
     CPU->_Flags = (!CPU->regs[inst])<<1 | (CPU->regs[inst]&1)<<2;
-    CPU->regs[inst] = CPU->regs[inst] >> 1;
+    CPU->acc = CPU->regs[inst] >> 1;
 }
 // Add Acumulator To Register And Store To Acumulator ;
 void ADD(QCPU *CPU, uint8_t inst) {
