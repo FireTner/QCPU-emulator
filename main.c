@@ -1,22 +1,40 @@
 #include "qcpu\qcpu.h"
 #include "qcpu\qcpu-idef.h"
-// #include <synchapi.h>
+#include <synchapi.h>
 
 /*
+LIM $1
+0
+LIM $2
+1
+CND 0
+AST $1
+ADD $2
+RST $1
 
-Subleq?
-
-128-256
-
+AST $1
+ADD $2
+RST $2
+JMP 5
 */
 
 uint8_t Program[] = {
-    _CND | ZERO,
-    _LIM | R(1), 1,
-    _INC | R(1),
-    _AST | R(1),
-    _PLD | P(1),
-    _JMP | A(3)
+_LIM | R(1),
+0,
+_LIM | R(2),
+1,
+_CND,
+_AST | R(1),
+_ADD | R(2),
+_RST | R(1),
+_PLD,
+
+_AST | R(1),
+_ADD | R(2),
+_RST | R(2),
+_PLD,
+
+_JMP | A(5)
 };
 
 uint8_t *storage;
@@ -51,5 +69,6 @@ int main() {
     while(cpu->running)
     {
         QCPU_step(cpu);
+        // printf("%x\n", cpu->_Flags);
     }
 }
