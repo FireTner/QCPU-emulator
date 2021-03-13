@@ -1,5 +1,6 @@
-#include "qcpu\qcpu.h"
-#include "qcpu\qcpu-idef.h"
+#include <stdint.h>
+#include <stdio.h>
+#include "..\qcpu\qcpu-idef.h"
 #include <synchapi.h>
 
 /*
@@ -54,4 +55,10 @@ uint8_t* readBinFile(const char* filePath)
     fread(program, size, 1, binFile);
     fclose(binFile);
     return program;
+}
+
+int main()
+{
+    writeBinFile("fib.bin", Program, sizeof(Program));
+    return 0;
 }
