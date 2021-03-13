@@ -1,5 +1,6 @@
 #include "qcpu\qcpu.h"
 #include "qcpu\qcpu-idef.h"
+// #include <synchapi.h>
 
 /*
 
@@ -10,12 +11,12 @@ Subleq?
 */
 
 uint8_t Program[] = {
-    _CND | NCOUT,
-    _LIM | R(1), 0,
+    _CND | ZERO,
+    _LIM | R(1), 1,
     _INC | R(1),
     _AST | R(1),
     _PLD | P(1),
-    _JMP | A(4)
+    _JMP | A(3)
 };
 
 uint8_t *storage;

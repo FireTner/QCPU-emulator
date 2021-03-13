@@ -43,12 +43,17 @@ _Bool QCPU_step(QCPU *CPU)
 {
     uint8_t inst = CPU->iCache[CPU->pc++];
     uint8_t opcode = inst & 0x1F;
-    // printf("%2x: %2x\n", CPU->pc, inst);
 
     if(opcode & 1)
+    {
+        // printf("ext: %d;%2x\n", (opcode>>1) & 0x3, (inst & 0xF8));
         ext_inst_table[(opcode>>1) & 0x3](CPU, (inst & 0xF8) >> 3);
+    }
     else
+    {
+        // printf("ins: %d;%2x\n", opcode>>1, (inst & 0xE0) >> 5);
         inst_table[opcode>>1](CPU, (inst & 0xE0) >> 5);
+    }
     
     if(opcode != 0x1E)
         CPU->poi = 0;
