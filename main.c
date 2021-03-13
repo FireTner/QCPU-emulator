@@ -72,3 +72,24 @@ int main() {
         // printf("%x\n", cpu->_Flags);
     }
 }
+
+/*
+Example loading .bin
+
+#include "qcpu-binutils/qcpu-binutils.h"
+
+int main()
+{
+    storage = malloc(256);
+    const char* filePath = "fib.bin";
+    memcpy(storage, readBinFile(filePath), fsize(filePath));
+    
+    QCPU *cpu = QCPU_init(PortIn, PortOut, StorageLoad, StorageStore);
+    
+    while(cpu->running)
+    {
+        QCPU_step(cpu);
+        // printf("%x\n", cpu->_Flags);
+    }
+}
+*/
