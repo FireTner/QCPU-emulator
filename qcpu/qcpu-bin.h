@@ -19,3 +19,10 @@ void QCPU_loadProgram(uint8_t* memory, const char* filePath)
     fread(memory, size, 1, binFile);
     fclose(binFile);
 }
+
+void QCPU_writeProgram(const char* filePath, const uint8_t* program, const size_t size)
+{
+    FILE* binFile = fopen(filePath, "w");
+    fwrite(program, size, 1, binFile);
+    fclose(binFile);
+}
