@@ -144,9 +144,3 @@ void MLD(QCPU *CPU, uint8_t inst)
 
 void (*inst_table[])(QCPU*, uint8_t) = { MSC, SST, SLD, SLP, PST, PLD, CND, LIM, RST, AST, INC, RSH, ADD, SUB, XOR, POI };
 void (*ext_inst_table[])(QCPU*, uint8_t) = { NOP, JMP, MST, MLD };
-
-/*
-I1 1100
-I2 1010
-_O 0010
-*/
