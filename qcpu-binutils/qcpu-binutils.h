@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdint.h>
 #include <stdio.h>
 #include "..\qcpu\qcpu-idef.h"
@@ -57,8 +59,11 @@ uint8_t* readBinFile(const char* filePath)
     return program;
 }
 
-int main()
+size_t fsize(const char* filePath)
 {
-    writeBinFile("fib.bin", Program, sizeof(Program));
-    return 0;
+    FILE* binFile = fopen(filePath, "r");
+    fseek(binFile, 0L, SEEK_END);
+    const size_t fsize = ftell(binFile);
+    fclose(binFile);
+    return fsize;
 }
