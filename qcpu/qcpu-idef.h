@@ -1,5 +1,4 @@
-#ifndef __QCPU_IDEF_H__
-#define __QCPU_IDEF_H__
+#pragma once
 
 #define _MSC 0
 #define _SST 2
@@ -32,7 +31,3 @@
 #define R(REG) (REG << 5)
 #define A(ADDR) (ADDR << 3)
 #define P(PORT) (PORT << 5)
-
-
-
-#endif

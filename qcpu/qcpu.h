@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdint.h> // TODO: Dont use this
 #include <stdlib.h> // malloc
 #include <string.h> // memcpy

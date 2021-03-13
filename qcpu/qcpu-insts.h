@@ -1,3 +1,5 @@
+#pragma once
+
 /* __all update zero flag__
  * INC | cout ( result > 0xFF )
  * RSH | underflow ( input&1 )
