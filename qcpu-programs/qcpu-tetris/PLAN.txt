@@ -1,0 +1,40 @@
+~ Collisions
+~ Placing
+~ Moving
+~ Rendering
+~ Detect io
+~ Types of tetromino
+~ Drop tetromino
+~ Main Loop
+
+~ Collisions
+: Fetch tetromino
+: Check for colliding Pieces
+: Fail if collided
+
+~ Placing -- If collided on bottom
+: Fetch tetromino
+: Store tetromino inside playgrid
+
+~ Moving
+: Detect io
+: X++?
+: X--?
+: Y--?
+
+~ Detect io
+: Check port
+: Store to mem
+
+~ Rendering 
+: Draw grid
+: Fetch tetromino
+: Types of tetromino
+: Draw tetromino
+
+~ Main Loop
+: Init
+: Loop
+: Render
+: Y--
+: JMP to Loop
