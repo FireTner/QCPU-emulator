@@ -20,7 +20,7 @@ workspace "QCPU-Emulator"
 
     filter "configurations:Debug"
         runtime "Debug"
-        buildoptions "-Og"
+        symbols "on"
 
     filter "configurations:Release"
         runtime "Release"
