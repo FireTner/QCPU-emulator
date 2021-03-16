@@ -1,3 +1,5 @@
-*/a.exe
 .vscode
-*.o
+**/bin
+**/bin-int
+**.make
+**Makefile
