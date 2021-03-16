@@ -37,6 +37,7 @@ workspace "QCPU-Emulator"
     outputDir = __OS .. "/%{cfg.buildcfg}"
 
 includePath = {}
-includePath["qcpu-emu"] = "%{wks.location}/qcpu"
+includePath["qcpuEmu"] = "%{wks.location}/qcpu"
 
 include "qcpu"
+include "qcpu-programs/qcpu-fib"
