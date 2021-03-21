@@ -46,7 +46,7 @@ _SUB | R(3),
 _RST | R(2),
 
 // If Y == 0 Then HLT
-_CND | 2,
+_CND | R(2), // R and CND have same shifting
 _JMP | A(18),
 _CND,
 _JMP | A(8),

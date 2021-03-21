@@ -40,5 +40,6 @@ includePath = {}
 includePath["qcpuEmu"] = "%{wks.location}/qcpu"
 
 include "qcpu"
+include "qcpu-assembler"
 include "qcpu-programs/qcpu-fib"
 include "qcpu-programs/qcpu-multiply"
