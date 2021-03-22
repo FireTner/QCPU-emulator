@@ -174,6 +174,9 @@ int main(int argc, char const *argv[])
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
+
+const char* _ALPHANUMSYM = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.$";
 
 typedef struct _string
 {
@@ -258,7 +261,9 @@ typedef struct _span
 
 typedef enum _toktype
 {
-    TT_ALPHANUMSYM
+    TT_ALPHANUMSYM,
+    TT_LIM,
+    TT_CND
 } toktype;
 
 typedef struct _token
@@ -268,16 +273,9 @@ typedef struct _token
     toktype type;
 } token;
 
-token* token_init()
-{
-    token* r = (token*)malloc(sizeof(token));
-    r->data = *string_init0();
-    return r;
-}
-
 typedef struct _lexer
 {
-    token tokcurr;
+    token* tokcurr;
     size_t pos;
     size_t ln;
 } lexer;
@@ -286,31 +284,17 @@ typedef struct _unit
 {
     string fname;
     string fdata; // the entire source string for the compilation unit
+    size_t fsize;
     lexer lexer; // the compilation unit's lexer state
 } unit;
 
-token lexer_any(unit *u);
-
-unit* unit_init(const char* fname, const char* fdata)
+void lexer_advance(unit* u)
 {
-    unit* r = (unit*)malloc(sizeof(unit));
-    r->fname = *string_init1(fname);
-    r->fdata = *string_init1(fdata);
-    r->lexer.tokcurr = *token_init();
-    r->lexer.pos = 0;
-    r->lexer.ln = 0;
-    lexer_any(r);
-    return r;
-}
-
-const char* _ALPHANUMSYM = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.$";
-
-token lexer_any(unit *u) // give me any token (this does all the actual code)
-{
-    token res = u->lexer.tokcurr;
-    token* toknext = NULL;
-    while(!toknext)
+    u->lexer.tokcurr = NULL;
+    while(!u->lexer.tokcurr)
     {
+        if(u->lexer.pos == u->fsize)
+            break;
         if(u->fdata.data[u->lexer.pos] == ';')
         {
             do
@@ -326,22 +310,51 @@ token lexer_any(unit *u) // give me any token (this does all the actual code)
         }
         else if(strchr(_ALPHANUMSYM, u->fdata.data[u->lexer.pos]))
         {
-            toknext = token_init();
-            toknext->span.idl = u->lexer.pos;
+            u->lexer.tokcurr = (token*)malloc(sizeof(token));
+            u->lexer.tokcurr->data = *string_init0();
+            u->lexer.tokcurr->span.idl = u->lexer.pos;
             do
             {
-                stringcat2(&toknext->data, u->fdata.data[u->lexer.pos]);
+                stringcat2(&u->lexer.tokcurr->data, u->fdata.data[u->lexer.pos]);
                 u->lexer.pos++;
             }
             while(strchr(_ALPHANUMSYM, u->fdata.data[u->lexer.pos]));
-            toknext->span.idr = u->lexer.pos;
-            toknext->span.ln = u->lexer.ln;
-            toknext->type = TT_ALPHANUMSYM;
+            u->lexer.tokcurr->span.idr = u->lexer.pos;
+            u->lexer.tokcurr->span.ln = u->lexer.ln;
+            if(stringcmp1(u->lexer.tokcurr->data, "LIM") == 0)
+            {
+                u->lexer.tokcurr->type = TT_LIM;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "CND") == 0)
+            {
+                u->lexer.tokcurr->type = TT_CND;
+            }
+            else
+            {
+                u->lexer.tokcurr->type = TT_ALPHANUMSYM;
+            }
         }
         else
             u->lexer.pos++;
     }
-    u->lexer.tokcurr = *toknext;
+}
+
+unit* unit_init(const char* fname, const char* fdata, const size_t fsize)
+{
+    unit* r = (unit*)malloc(sizeof(unit));
+    r->fname = *string_init1(fname);
+    r->fdata = *string_init1(fdata);
+    r->fsize = fsize;
+    r->lexer.pos = 0;
+    r->lexer.ln = 0;
+    lexer_advance(r);
+    return r;
+}
+
+token* lexer_any(unit *u) // give me any token (this does all the actual code)
+{
+    token* res = u->lexer.tokcurr;
+    lexer_advance(u);
     return res;
 }
 //token lexer_expect(unit *u, toktype t); // require that the next token has this given tag, error otherwise.
@@ -358,7 +371,14 @@ int main(int argc, char const *argv[])
     fread(fdata, fsize, 1, fp);
     fdata[fsize] = '\0';
     fclose(fp);
-    unit u = *unit_init(argv[1], fdata);
-    token testtok = lexer_any(&u);
+    unit u = *unit_init(argv[1], fdata, fsize);
+    while(true)
+    {
+        token* tok = lexer_any(&u);
+        if(tok)
+        {
+            printf("%s", tok->data.data);
+        }
+    }
     return 0;
 }
