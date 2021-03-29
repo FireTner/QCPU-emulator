@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdio.h>
 
-const char* _ALPHANUMSYM = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789,.$";
+const char* _ALPHANUMSYM = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.$";
 
 typedef struct _string
 {
@@ -75,6 +75,11 @@ int stringcmp1(const string a, const char* b)
     return strcmp(a.data, b);
 }
 
+int stringcmp2(const string a, const char* b)
+{
+    return strcmp(a.data, b);
+}
+
 void free_string0(string r)
 {
     free(r.data);
@@ -88,7 +93,32 @@ void free_string1(string* r)
 
 typedef enum _toktype
 {
-    TT_ALPHANUMSYM
+    TT_NONE,
+    TT_MSC,
+    TT_SST,
+    TT_SLD,
+    TT_SLP,
+    TT_PST,
+    TT_PLD,
+    TT_CND,
+    TT_LIM,
+    TT_RST,
+    TT_AST,
+    TT_INC,
+    TT_RSH,
+    TT_ADD,
+    TT_SUB,
+    TT_XOR,
+    TT_POI,
+    TT_NOP,
+    TT_JMP,
+    TT_MST,
+    TT_MLD,
+    TT_REG,
+    TT_PORT,
+    TT_LABEL,
+    TT_ALPHANUMSYM,
+    TT_COMMA
 } toktype;
 
 struct _unit;
@@ -113,6 +143,14 @@ token* token_init0()
 {
     token* r = (token*)malloc(sizeof(token));
     r->data = *string_init0();
+    r->type = TT_NONE;
+    return r;
+}
+
+token* token_init1(const char* data)
+{
+    token* r = (token*)malloc(sizeof(token));
+    r->data = *string_init1(data);
     return r;
 }
 
@@ -170,7 +208,107 @@ void lexer_advance(unit* u)
             }
             while(strchr(_ALPHANUMSYM, u->fdata.data[u->lexer.pos]) != NULL && u->fdata.data[u->lexer.pos] != '\0');
             u->lexer.tokcurr->span.idr = u->lexer.pos;
-            u->lexer.tokcurr->type = TT_ALPHANUMSYM;
+            if(stringcmp1(u->lexer.tokcurr->data, "MSC") == 0)
+            {
+                u->lexer.tokcurr->type = TT_MSC;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "SST") == 0)
+            {
+                u->lexer.tokcurr->type = TT_SST;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "SLD") == 0)
+            {
+                u->lexer.tokcurr->type = TT_SLD;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "SLP") == 0)
+            {
+                u->lexer.tokcurr->type = TT_SLP;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "PST") == 0)
+            {
+                u->lexer.tokcurr->type = TT_PST;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "PLD") == 0)
+            {
+                u->lexer.tokcurr->type = TT_PLD;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "CND") == 0)
+            {
+                u->lexer.tokcurr->type = TT_CND;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "LIM") == 0)
+            {
+                u->lexer.tokcurr->type = TT_LIM;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "RST") == 0)
+            {
+                u->lexer.tokcurr->type = TT_RST;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "AST") == 0)
+            {
+                u->lexer.tokcurr->type = TT_AST;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "INC") == 0)
+            {
+                u->lexer.tokcurr->type = TT_INC;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "RSH") == 0)
+            {
+                u->lexer.tokcurr->type = TT_RSH;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "ADD") == 0)
+            {
+                u->lexer.tokcurr->type = TT_ADD;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "SUB") == 0)
+            {
+                u->lexer.tokcurr->type = TT_SUB;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "XOR") == 0)
+            {
+                u->lexer.tokcurr->type = TT_XOR;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "POI") == 0)
+            {
+                u->lexer.tokcurr->type = TT_POI;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "NOP") == 0)
+            {
+                u->lexer.tokcurr->type = TT_NOP;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "JMP") == 0)
+            {
+                u->lexer.tokcurr->type = TT_JMP;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "MST") == 0)
+            {
+                u->lexer.tokcurr->type = TT_MST;
+            }
+            else if(stringcmp1(u->lexer.tokcurr->data, "MLD") == 0)
+            {
+                u->lexer.tokcurr->type = TT_MLD;
+            }
+            else if(u->lexer.tokcurr->data.data[0] == '$')
+            {
+                u->lexer.tokcurr->type = TT_REG;
+            }
+            else if(u->lexer.tokcurr->data.data[0] == '%')
+            {
+                u->lexer.tokcurr->type = TT_PORT;
+            }
+            else if(u->lexer.tokcurr->data.data[0] == '.')
+            {
+                u->lexer.tokcurr->type = TT_LABEL;
+            }
+            else u->lexer.tokcurr->type = TT_ALPHANUMSYM;
+        }
+        else if(u->fdata.data[u->lexer.pos] == ',')
+        {
+            u->lexer.tokcurr = token_init1(",");
+            u->lexer.tokcurr->span.idl = u->lexer.pos;
+            u->lexer.tokcurr->span.ln = u->lexer.ln;
+            u->lexer.tokcurr->span.idr = ++u->lexer.pos;
+            u->lexer.tokcurr->type = TT_COMMA;
         }
         else if(u->fdata.data[u->lexer.pos] == '\0')
         {
@@ -192,7 +330,7 @@ unit* unit_init(const char* fname, const char* fdata)
     unit* r = (unit*)malloc(sizeof(unit));
     r->fname = *string_init1(fname);
     r->fdata = *string_init1(fdata);
-    r->lexer.tokcurr = NULL;
+    r->lexer.tokcurr = token_init0();
     r->lexer.pos = 0;
     r->lexer.ln = 1;
     lexer_advance(r);
@@ -218,7 +356,8 @@ int main(int argc, char const *argv[])
     token* tok = lexer_any(&u);
     do
     {
-        printf("%s", tok->data.data);
+        printf("%s %i\n", tok->data.data, tok->type);
+        free_token1(tok);
         tok = lexer_any(&u);
     }
     while(tok);
